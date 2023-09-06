@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Awesome UI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <button id="expand-sidebar" class="expand-button"><i class="fas fa-angle-double-right"></i></button>
+        <button id="toggle-sidebar"><i class="fas fa-bars"></i> Toggle Sidebar</button>
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-list"></i>
+                Sections
+                <button id="toggle-theme" class="theme-toggle-button">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="collapse-sidebar" class="collapse-button"><i class="fas fa-angle-double-left"></i></button>
+            </div>
+            <input type="text" id="search-bar" placeholder="Search...">
+        </div>
+        <div class="main-content">
+            <div class="content-header"><i class="fas fa-info-circle"></i> Details</div>
+            <div class="details-area"></div>
+        </div>
+    </div>
+    <div class="fab"><i class="fas fa-plus"></i></div>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,271 @@
+/* Add this to your CSS file */
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 30%;
+    background-color: #333;
+    color: white;
+    padding: 1em;
+    overflow-y: auto;
+}
+
+.main-content {
+    width: 70%;
+    background-color: #f1f1f1;
+    padding: 1em;
+    overflow-y: auto;
+}
+
+/* styles.css */
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 30%;
+    background-color: #333;
+    color: white;
+    padding: 1em;
+    overflow-y: auto;
+}
+
+.main-content {
+    width: 70%;
+    background-color: #f1f1f1;
+    padding: 1em;
+    overflow-y: auto;
+    border-radius: 10px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* styles.css */
+
+/* ... Existing Styles ... */
+
+/* Enhancements */
+.sidebar-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar-list li {
+    padding: 10px;
+    cursor: pointer;
+    margin: 5px 0;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar-list li:hover {
+    background-color: #444;
+}
+
+/* Responsiveness */
+@media only screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar,
+    .main-content {
+        width: 100%;
+    }
+}
+
+.sidebar-header,
+.content-header {
+    font-size: 1.5em;
+    /* padding: 10px 0; */
+    border-bottom: 2px solid white;
+    background-color: #222;
+    color: white;
+    padding: 10px;
+}
+
+.sidebar,
+.main-content {
+    overflow-y: auto;
+    height: calc(100vh - 50px);
+    /* Adjust based on your header size */
+}
+
+.fab {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    line-height: 50px;
+    font-size: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 768px) {
+    /* ... Existing Styles ... */
+
+    .fab {
+        bottom: 10px;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        font-size: 20px;
+    }
+}
+
+.edit-btn {
+    margin-left: 10px;
+    cursor: pointer;
+    color: yellow;
+}
+
+.delete-btn {
+    margin-left: 10px;
+    cursor: pointer;
+    color: red;
+}
+
+.fab:hover {
+    background-color: #0056b3;
+}
+
+#search-bar {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+}
+
+[draggable] {
+    cursor: move;
+}
+
+/* Highlight the drop target */
+.sidebar-list li.drag-over {
+    border: 2px dashed #aaa;
+    background-color: #f1f1f1;
+}
+
+@media only screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        padding-bottom: 20px;
+    }
+
+    .main-content {
+        width: 100%;
+        margin-top: 20px;
+    }
+}
+
+#toggle-sidebar {
+    display: none;
+}
+
+@media only screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        padding-bottom: 20px;
+        display: none;
+        /* Initially hidden on small screens */
+    }
+
+    .main-content {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    #toggle-sidebar {
+        display: block;
+    }
+}
+
+.theme-toggle-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    margin-left: 10px;
+}
+
+button {
+    margin: 10px 0;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+body.dark-theme {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+.sidebar.dark-theme,
+.main-content.dark-theme {
+    background-color: #1e1e1e;
+}
+
+.sidebar.collapsed {
+    width: 0;
+    padding: 0;
+    /* Add this line */
+    overflow: hidden;
+    transition: width 0.5s ease-out;
+}
+
+.sidebar.collapsed .sidebar-header,
+.sidebar.collapsed .theme-toggle-button,
+.sidebar.collapsed .collapse-button {
+    display: none;
+}
+
+.expand-button {
+    display: none;
+    /* Initially hidden */
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+
+/* ... Existing CSS ... */
+
+/* Highlight the drop target */
+.sidebar-list li.drag-over {
+    border: 2px dashed #aaa;
+    background-color: #f1f1f1;
+    margin-right: 10px;
+}
+
+/* ... Existing CSS ... */
