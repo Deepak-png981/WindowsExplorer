@@ -1,23 +1,48 @@
 /* Add this to your CSS file */
+:root {
+    --primary-color: #007bff;
+    --primary-dark: #0056b3;
+    --bg-color: #f9f9f9;
+    --dark-bg-color: #333;
+    --light-bg-color: #f1f1f1;
+    --text-color: #333;
+    --light-text-color: #f9f9f9;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+}
 
 .container {
     display: flex;
     height: 100vh;
+    transition: all 0.3s ease;
 }
 
 .sidebar {
     width: 30%;
-    background-color: #333;
-    color: white;
+    background-color: #ffffff;
     padding: 1em;
     overflow-y: auto;
+    border-right: 1px solid #e0e0e0;
 }
+
 
 .main-content {
     width: 70%;
-    background-color: #f1f1f1;
+    background-color: #f9f9f9;
     padding: 1em;
     overflow-y: auto;
+    border-radius: 10px;
 }
 
 /* styles.css */
@@ -59,11 +84,13 @@
     padding: 10px;
     cursor: pointer;
     margin: 5px 0;
+    background-color: #f5f5f5;
+    border-radius: 5px;
     transition: background-color 0.3s ease;
 }
 
 .sidebar-list li:hover {
-    background-color: #444;
+    background-color: #e0e0e0;
 }
 
 /* Responsiveness */
@@ -81,18 +108,19 @@
 .sidebar-header,
 .content-header {
     font-size: 1.5em;
-    /* padding: 10px 0; */
-    border-bottom: 2px solid white;
-    background-color: #222;
-    color: white;
-    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid #e0e0e0;
+    padding: 10px 0;
+    margin-bottom: 10px;
 }
+
 
 .sidebar,
 .main-content {
     overflow-y: auto;
     height: calc(100vh - 50px);
-    /* Adjust based on your header size */
 }
 
 .fab {
@@ -108,6 +136,7 @@
     font-size: 24px;
     border-radius: 50%;
     cursor: pointer;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 @media only screen and (max-width: 768px) {
@@ -143,7 +172,10 @@
     width: 100%;
     padding: 8px;
     margin: 10px 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
 }
+
 
 [draggable] {
     cursor: move;
@@ -226,7 +258,11 @@ body.dark-theme {
     color: #ffffff;
 }
 
-.sidebar.dark-theme,
+.sidebar.dark-theme {
+    background-color: #1e1e1e;
+    border-right: 1px solid #333;
+}
+
 .main-content.dark-theme {
     background-color: #1e1e1e;
 }
@@ -268,4 +304,211 @@ body.dark-theme {
     margin-right: 10px;
 }
 
-/* ... Existing CSS ... */
+/* .sidebar-list {
+    padding-left: 0;
+} */
+
+.sidebar-list li {
+    position: relative;
+    padding-left: 20px;
+}
+
+.sidebar-list li .fas.fa-angle-right {
+    position: absolute;
+    /* margin: 10px; */
+    left: 0;
+    top: 50%;
+    /* margin-right: 10px; */
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.child-list {
+    display: none;
+    margin-left: 20px;
+    /* Indentation for child lists */
+}
+
+/* Add to your style.css or in a <style> block in your HTML */
+
+.sidebar-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar-list>li {
+    cursor: pointer;
+    padding: 8px;
+    border: 1px solid #eee;
+    margin: 5px 0;
+    /* background-color: #f5f5f5; */
+}
+
+.sidebar-list .child-list {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 20px;
+    display: none;
+}
+
+.edit-btn,
+.delete-btn,
+.add-child-btn {
+    margin-left: 10px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #f5f5f5;
+    display: inline-block;
+}
+
+.collapse-button,
+.expand-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.expand-button {
+    display: none;
+}
+
+/* .add-child-btn {
+    cursor: pointer;
+    margin-left: 10px;
+} */
+
+
+
+
+/* ui improvement */
+.container {
+    gap: 1rem;
+}
+
+.sidebar-list>li {
+    margin: 0.5rem 0;
+}
+
+.sidebar-header,
+.content-header {
+    margin-bottom: 1rem;
+}
+
+button,
+.fab,
+.sidebar-list>li,
+.edit-btn,
+.delete-btn,
+.add-child-btn {
+    transition: all 0.3s ease;
+}
+
+button:hover,
+.fab:hover {
+    transform: scale(1.05);
+}
+
+.sidebar-list>li:hover,
+.edit-btn:hover,
+.delete-btn:hover,
+.add-child-btn:hover {
+    transform: scale(1.03);
+    background-color: #e0e0e0;
+}
+
+/* Enhancements for the Sidebar */
+.sidebar {
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: var(--light-bg-color);
+    color: var(--text-color);
+}
+
+.sidebar-list>li {
+    border: none;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-list li:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Enhancements for the Content Area */
+.main-content {
+    background-color: var(--bg-color);
+    padding: 2em;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/* Enhancements for FAB button */
+.fab {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Enhancements for Theme Toggle */
+.theme-toggle-button {
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    padding: 0.5em;
+    color: var(--light-text-color);
+}
+
+.theme-toggle-button:hover {
+    background-color: var(--primary-dark);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.main-content {
+    animation: fadeIn 0.5s forwards;
+}
+
+.sidebar-list li.dark-theme {
+    background-color: #333;
+}
+
+.sidebar-list li.dark-theme:hover {
+    background-color: #444;
+}
+
+#search-bar.dark-theme {
+    background-color: #333;
+    border-color: #444;
+    color: white;
+}
+
+.edit-btn.dark-theme,
+.delete-btn.dark-theme,
+.add-child-btn.dark-theme {
+    background-color: #444;
+}
+
+.edit-btn.dark-theme:hover,
+.delete-btn.dark-theme:hover,
+.add-child-btn.dark-theme:hover {
+    background-color: #555;
+}
+
+/* Responsive styles */
+@media only screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar,
+    .main-content {
+        width: 100%;
+    }
+}

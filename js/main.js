@@ -1,10 +1,51 @@
 // main.js
-let sidebarList = document.createElement('ul');;
+
+// Updated hierarchical data structure
+let sections = [
+    {
+        name: "Section 1",
+        details: "Details for Section 1",
+        children: [
+            {
+                name: "Subsection 1.1",
+                details: "Details for Subsection 1.1",
+                children: []
+            },
+            {
+                name: "Subsection 1.2",
+                details: "Details for Subsection 1.2",
+                children: []
+            }
+        ]
+    },
+    {
+        name: "Section 2",
+        details: "Details for Section 2",
+        children: [
+            {
+                name: "Subsection 2.1",
+                details: "Details for Subsection 2.1",
+                children: []
+            },
+            {
+                name: "Subsection 2.2",
+                details: "Details for Subsection 2.2",
+                children: []
+            }
+        ]
+    },
+    {
+        name: "Section 3",
+        details: "Details for Section 3",
+        children: []
+    }
+];
 
 const themeToggleButton = document.getElementById('toggle-theme');
 const bodyElement = document.body;
 const sidebarElement = document.querySelector('.sidebar');
 const mainContentElement = document.querySelector('.main-content');
+let sidebarList = document.createElement('ul');;
 
 themeToggleButton.addEventListener('click', function () {
     if (bodyElement.classList.contains('dark-theme')) {
@@ -21,101 +62,186 @@ themeToggleButton.addEventListener('click', function () {
 });
 
 let deletedSectionsCounter = 0;
-let sections = {
-    "Section 1": "Details for Section 1",
-    "Section 2": "Details for Section 2",
-    "Section 3": "Details for Section 3",
+const findSectionByName = (name, sections) => {
+    for (let section of sections) {
+        if (section.name === name) return section;
+        if (section.children.length) {
+            const found = findSectionByName(name, section.children);
+            if (found) return found;
+        }
+    }
+    return null;
 };
+const updateSectionName = (oldName, newName, sections) => {
+    for (let section of sections) {
+        if (section.name === oldName) {
+            section.name = newName;
+            return true;
+        }
+        if (section.children.length) {
+            if (updateSectionName(oldName, newName, section.children)) return true;
+        }
+    }
+    return false;
+};
+const deleteSectionByName = (name, sections) => {
+    for (let i = 0; i < sections.length; i++) {
+        if (sections[i].name === name) {
+            sections.splice(i, 1);
+            return true;
+        }
+        if (sections[i].children.length) {
+            if (deleteSectionByName(name, sections[i].children)) return true;
+        }
+    }
+    return false;
+};
+const createTreeItem = (section, parentList) => {
+    const listItem = document.createElement('li');
+    listItem.innerHTML = `<i class="fas fa-angle-right"></i> ${section.name}`;
+    listItem.setAttribute('data-section-name', section.name);
+    listItem.setAttribute('draggable', 'true');
+
+    // List item click event
+    listItem.addEventListener('click', function () {
+        const currentSectionName = listItem.getAttribute('data-section-name');
+        const detailsContainer = document.createElement('div');
+        const toggleButton = document.createElement('button');
+        toggleButton.innerHTML = '<i class="fas fa-eye"></i> Toggle Details';
+        toggleButton.addEventListener('click', function () {
+            detailsContainer.style.display = detailsContainer.style.display === 'none' ? 'block' : 'none';
+        });
+        detailsContainer.innerHTML = sections[currentSectionName];
+        detailsContainer.style.display = 'none';
+        const detailsArea = document.querySelector('.details-area');
+        detailsArea.innerHTML = '';
+        detailsArea.appendChild(toggleButton);
+        detailsArea.appendChild(detailsContainer);
+    });
+
+    // Drag event
+    listItem.addEventListener('dragstart', function (e) {
+        e.dataTransfer.setData('text/plain', listItem.getAttribute('data-section-name'));
+        console.log('Dragging:', listItem.getAttribute('data-section-name')); // Add this line
+    });
+    listItem.querySelector('.fas.fa-angle-right').addEventListener('click', function () {
+        const childList = listItem.querySelector('.child-list');
+        if (childList) {
+            if (childList.style.display === 'none' || !childList.style.display) {
+                childList.style.display = 'block';
+                this.classList.add('fa-angle-down');
+                this.classList.remove('fa-angle-right');
+            } else {
+                childList.style.display = 'none';
+                this.classList.add('fa-angle-right');
+                this.classList.remove('fa-angle-down');
+            }
+        }
+    });
+
+    // Edit button
+    const editBtn = document.createElement('span');
+    editBtn.innerHTML = '<i class="fas fa-edit"></i>';
+    editBtn.className = 'edit-btn';
+    editBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        const currentSectionName = listItem.getAttribute('data-section-name');
+        const newName = prompt('Enter new name:', currentSectionName);
+        if (newName && newName !== currentSectionName) {
+            updateSectionName(currentSectionName, newName, sections);
+            populateSidebar(); // Repopulate sidebar to reflect changes
+        }
+    });
+
+    // Delete button
+    const deleteBtn = document.createElement('span');
+    deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+    deleteBtn.className = 'delete-btn';
+    deleteBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        const currentSectionName = listItem.getAttribute('data-section-name');
+        const confirmDelete = window.confirm(`Are you sure you want to delete ${currentSectionName}?`);
+        if (confirmDelete) {
+            deleteSectionByName(currentSectionName, sections);
+            populateSidebar();
+        }
+    });
+    // add child button
+    const addChildBtn = document.createElement('span');
+    addChildBtn.innerHTML = '<i class="fas fa-plus"></i>';
+    addChildBtn.className = 'add-child-btn';
+    addChildBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        const currentSectionName = listItem.getAttribute('data-section-name');
+        const section = findSectionByName(currentSectionName, sections);
+        if (section) {
+            const newChildName = prompt('Enter name for the new child section:');
+            if (newChildName) {
+                section.children.push({
+                    name: newChildName,
+                    details: `Details for ${newChildName}`,
+                    children: []
+                });
+                populateSidebar();  // Repopulate sidebar to reflect changes
+            }
+        }
+    });
+    listItem.appendChild(addChildBtn);
+
+
+
+    listItem.appendChild(editBtn);
+    listItem.appendChild(deleteBtn);
+    parentList.appendChild(listItem);
+
+    // Recursive creation of child nodes
+    if (section.children && section.children.length) {
+        const childList = document.createElement('ul');
+        childList.className = 'child-list';
+        listItem.appendChild(childList);
+        section.children.forEach(childSection => createTreeItem(childSection, childList));
+    }
+}
+
 const populateSidebar = () => {
     sidebarList.innerHTML = '';
-    Object.keys(sections).forEach(section => {
-        const listItem = document.createElement('li');
-        listItem.innerHTML = `<i class="fas fa-angle-right"></i> ${section}`;
-        listItem.setAttribute('data-section-name', section);
-        listItem.setAttribute('draggable', 'true');
-
-        listItem.addEventListener('click', function () {
-            const currentSectionName = listItem.getAttribute('data-section-name');
-            const detailsContainer = document.createElement('div');
-            const toggleButton = document.createElement('button');
-            toggleButton.innerHTML = '<i class="fas fa-eye"></i> Toggle Details';
-            toggleButton.addEventListener('click', function () {
-                detailsContainer.style.display = detailsContainer.style.display === 'none' ? 'block' : 'none';
-            });
-            detailsContainer.innerHTML = sections[currentSectionName];
-            detailsContainer.style.display = 'none';
-            const detailsArea = document.querySelector('.details-area');
-            detailsArea.innerHTML = '';
-            detailsArea.appendChild(toggleButton);
-            detailsArea.appendChild(detailsContainer);
-        });
-
-        listItem.addEventListener('dragstart', function (e) {
-            e.dataTransfer.setData('text/plain', listItem.getAttribute('data-section-name'));
-        });
-
-        const editBtn = document.createElement('span');
-        editBtn.innerHTML = '<i class="fas fa-edit"></i>';
-        editBtn.className = 'edit-btn';
-        editBtn.addEventListener('click', function (e) {
-            e.stopPropagation();
-            const currentSectionName = listItem.getAttribute('data-section-name');
-            const newName = prompt('Enter new name:', currentSectionName);
-            if (newName && newName !== currentSectionName) { // Check if the name actually changed
-                sections[newName] = sections[currentSectionName];
-                delete sections[currentSectionName];
-                populateSidebar(); // Repopulate sidebar to reflect changes
-            }
-        });
-
-        const deleteBtn = document.createElement('span');
-        deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
-        deleteBtn.className = 'delete-btn';
-        deleteBtn.addEventListener('click', function (e) {
-            e.stopPropagation();
-            const currentSectionName = listItem.getAttribute('data-section-name');
-            const confirmDelete = window.confirm(`Are you sure you want to delete ${currentSectionName}?`);
-            if (confirmDelete) {
-                listItem.remove();
-                delete sections[currentSectionName];
-                deletedSectionsCounter++;
-            }
-        });
-
-        listItem.appendChild(editBtn);
-        listItem.appendChild(deleteBtn);
-        sidebarList.appendChild(listItem);
-    });
+    sections.forEach(section => createTreeItem(section, sidebarList));
 };
+
 document.addEventListener("DOMContentLoaded", function () {
 
-
-
     sidebarList.className = 'sidebar-list';
-
-
-
     populateSidebar();
 
     document.querySelector('.sidebar').appendChild(sidebarList);
 
+    // FAB click event
     const fab = document.querySelector('.fab');
     let sectionCounter = 4;
 
     fab.addEventListener('click', function () {
-        let newSection;
+        let newSectionName;
         if (deletedSectionsCounter > 0) {
             // Use the counter value before decrementing
-            newSection = `Section ${sectionCounter - deletedSectionsCounter}`;
+            newSectionName = `Section ${sectionCounter - deletedSectionsCounter}`;
             deletedSectionsCounter--;
         } else {
-            newSection = `Section ${sectionCounter}`;
+            newSectionName = `Section ${sectionCounter}`;
             sectionCounter++;
         }
-        sections[newSection] = `Details for ${newSection}`;
+
+        const newSection = {
+            name: newSectionName,
+            details: `Details for ${newSectionName}`,
+            children: []
+        };
+
+        sections.push(newSection); // Add the new section to the sections array
+
         populateSidebar();  // Repopulate to include new section
     });
 
+    // Search bar functionality
     document.getElementById('search-bar').addEventListener('input', function () {
         const query = this.value.toLowerCase();
         const listItems = document.querySelectorAll('.sidebar-list li');
@@ -125,11 +251,15 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    // Sidebar toggle
     document.getElementById('toggle-sidebar').addEventListener('click', function () {
         const sidebar = document.querySelector('.sidebar');
         sidebar.style.display = sidebar.style.display === 'none' ? 'block' : 'none';
     });
 });
+
+// ... Rest of your JavaScript code ...
+
 
 
 // main.js
@@ -184,22 +314,35 @@ expandButton.addEventListener('click', function () {
 
 // ... Existing JavaScript code ...
 
-// Function to rearrange the sections
-const rearrangeSections = (draggedSectionName, targetSectionName) => {
-    const temp = sections[draggedSectionName];
-    delete sections[draggedSectionName];
-
-    const reorderedSections = {};
-    Object.keys(sections).forEach((section) => {
-        if (section === targetSectionName) {
-            reorderedSections[draggedSectionName] = temp;
+// Helper function to find the parent of a section
+const findParentOfSection = (name, sections, parent = null) => {
+    for (let section of sections) {
+        if (section.name === name) return parent;
+        if (section.children.length) {
+            const foundParent = findParentOfSection(name, section.children, section);
+            if (foundParent) return foundParent;
         }
-        reorderedSections[section] = sections[section];
-    });
+    }
+    return null;
+};
 
-    sections = { ...reorderedSections };
+const rearrangeSections = (draggedSectionName, targetSectionName) => {
+    const draggedSection = findSectionByName(draggedSectionName, sections);
+    const draggedSectionParent = findParentOfSection(draggedSectionName, sections);
+    const targetSectionParent = findParentOfSection(targetSectionName, sections);
+
+    const parentArray = draggedSectionParent ? draggedSectionParent.children : sections;
+    const targetArray = targetSectionParent ? targetSectionParent.children : sections;
+
+    // Remove the dragged section from its original location
+    parentArray.splice(parentArray.indexOf(draggedSection), 1);
+
+    // Insert it before the target section
+    targetArray.splice(targetArray.indexOf(findSectionByName(targetSectionName, sections)), 0, draggedSection);
+
     populateSidebar();
 };
+
 
 // Add dragover event
 sidebarList.addEventListener('dragover', function (e) {
@@ -212,6 +355,8 @@ sidebarList.addEventListener('drop', function (e) {
 
     const draggedSectionName = e.dataTransfer.getData('text/plain');
     const target = e.target.closest('li');
+
+    console.log('Dropped on:', target.getAttribute('data-section-name')); // Add this line
 
     if (target && target.getAttribute('data-section-name') !== draggedSectionName) {
         rearrangeSections(draggedSectionName, target.getAttribute('data-section-name'));
